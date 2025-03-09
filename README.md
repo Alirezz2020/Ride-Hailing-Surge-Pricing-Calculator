@@ -10,7 +10,7 @@ This project demonstrates a surge pricing and dynamic pricing system for a ride-
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Alirezz2020/Ride-Hailing-Surge-Pricing-Calculator.git
    cd ride_hailing_dynamic_pricing
 
 2. **Install dependencies:**
