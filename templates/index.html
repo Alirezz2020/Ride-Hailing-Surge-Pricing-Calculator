@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ride Hailing Surge Pricing Calculator</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <h1>Ride Hailing Surge Pricing Calculator</h1>
+    <form id="pricing-form">
+        <label for="base_fare">Base Fare ($):</label>
+        <input type="number" id="base_fare" name="base_fare" step="0.01" value="10.0" required>
+        <br>
+        <label for="demand">Current Demand (number of ride requests):</label>
+        <input type="number" id="demand" name="demand" value="10" required>
+        <br>
+        <label for="supply">Available Drivers (supply):</label>
+        <input type="number" id="supply" name="supply" value="5" required>
+        <br>
+        <label for="event">Special Event (true/false):</label>
+        <input type="text" id="event" name="event" value="false" required>
+        <br>
+        <button type="submit">Calculate Fare</button>
+    </form>
+    <div id="result">
+        {% if result %}
+            <h2>Calculation Result</h2>
+            <p>Base Fare: ${{ result.base_fare }}</p>
+            <p>Surge Multiplier: {{ result.surge_multiplier }}</p>
+            <p>Final Fare: ${{ result.final_fare }}</p>
+        {% endif %}
+    </div>
+    <script>
+        document.getElementById('pricing-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const base_fare = document.getElementById('base_fare').value;
+            const demand = document.getElementById('demand').value;
+            const supply = document.getElementById('supply').value;
+            const event = document.getElementById('event').value;
+
+            const payload = {
+                base_fare: base_fare,
+                demand: demand,
+                supply: supply,
+                event: event
+            };
+
+            fetch('/calculate_fare', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <h2>Calculation Result</h2>
+                    <p>Base Fare: $${data.base_fare}</p>
+                    <p>Surge Multiplier: ${data.surge_multiplier}</p>
+                    <p>Final Fare: $${data.final_fare}</p>
+                `;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
